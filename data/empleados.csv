@@ -1,0 +1,6 @@
+documento,nombre,apellido,email,edad,ciudad,barrio,roles,salarioBase,area,cargo,fechaContratacion
+1001,Juan,Perez,juan.perez@acme.com,30,Bogota,Chapinero,"empleado,reportes",3000000,Desarrollo,Desarrollador Senior,2020-01-15
+1002,Maria,Gomez,maria.gomez@acme.com,28,Medellin,El Poblado,"empleado",2500000,Contabilidad,Analista,2021-03-01
+1003,Carlos,Ruiz,carlos.ruiz@acme.com,35,Cali,San Antonio,"admin,empleado",4000000,Recursos Humanos,Gerente,2019-07-20
+1004,Ana,Lopez,ana.lopez@acme.com,25,Bogota,Usaquen,"empleado",2000000,Ventas,Ejecutivo de Ventas,2022-05-10
+1005,Pedro,Martinez,pedro.martinez@acme.com,32,Bogota,Suba,"empleado",2800000,Marketing,Diseñador Grafico,2020-11-01

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <!-- Carga de Tailwind CSS para estilos rápidos y modernos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Fuente Inter para una mejor legibilidad */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-8">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Bienvenido al Sistema de Nómina</h1>
+        <h2 class="text-2xl font-semibold text-blue-600 mb-8"><%= title %></h2>
+        
+        <p class="text-lg text-gray-700 mb-8">Explora la información de tu empresa:</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="/areas-page" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Ver Áreas
+            </a>
+            <a href="/cargos-page" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Ver Cargos
+            </a>
+            <a href="/empleados-page" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Ver Empleados
+            </a>
+            <a href="/nominas-page" class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Ver Nóminas
+            </a>
+        </div>
+    </div>
+</body>
+</html>

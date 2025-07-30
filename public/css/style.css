@@ -1,0 +1,14 @@
+body {
+    background-color: #2f2f30; /* Azul muy muy claro */
+    font-family: 'Arial', sans-serif;
+}
+h1 {
+    color: #2c658b; /* Rojo brillante */
+    text-align: center;
+    font-size: 3em;
+    border: #2c658b solid 2px;
+}
+p {
+    color: #008000; /* Verde oscuro */
+    font-weight: bold;
+}

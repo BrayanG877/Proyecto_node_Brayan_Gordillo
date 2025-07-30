@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empleados de Acme Corporate</title>
+    <!-- Carga de Tailwind CSS para estilos rápidos y modernos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Fuente Inter para una mejor legibilidad */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilos para el modal */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed; /* Posición fija para cubrir toda la pantalla */
+            z-index: 1000; /* Por encima de otros elementos */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Habilitar scroll si el contenido es muy grande */
+            background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 700px; /* Más ancho para el formulario de empleados */
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-6xl w-full">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Empleados de Acme Corporate</h1>
+        
+        <!-- Formulario para Crear Nuevo Empleado -->
+        <form id="createEmpleadoForm" class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4 col-span-full">Crear Nuevo Empleado</h2>
+            
+            <div>
+                <label for="documento" class="block text-gray-700 text-sm font-bold mb-2">Documento:</label>
+                <input type="text" id="documento" name="documento" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="apellido" class="block text-gray-700 text-sm font-bold mb-2">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" name="email" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="edad" class="block text-gray-700 text-sm font-bold mb-2">Edad:</label>
+                <input type="number" id="edad" name="edad" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="ciudad" class="block text-gray-700 text-sm font-bold mb-2">Ciudad:</label>
+                <input type="text" id="ciudad" name="ciudad"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="barrio" class="block text-gray-700 text-sm font-bold mb-2">Barrio:</label>
+                <input type="text" id="barrio" name="barrio"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="roles" class="block text-gray-700 text-sm font-bold mb-2">Roles (separados por coma):</label>
+                <input type="text" id="roles" name="roles"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="salarioBase" class="block text-gray-700 text-sm font-bold mb-2">Salario Base:</label>
+                <input type="number" step="0.01" id="salarioBase" name="salarioBase" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="areaId" class="block text-gray-700 text-sm font-bold mb-2">Área:</label>
+                <select id="areaId" name="areaId" required
+                        class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Seleccione un área</option>
+                </select>
+            </div>
+            <div>
+                <label for="cargoId" class="block text-gray-700 text-sm font-bold mb-2">Cargo:</label>
+                <select id="cargoId" name="cargoId" required
+                        class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Seleccione un cargo</option>
+                </select>
+            </div>
+            <div>
+                <label for="fechaContratacion" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Contratación:</label>
+                <input type="date" id="fechaContratacion" name="fechaContratacion" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+
+            <div class="col-span-full text-center mt-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    Añadir Empleado
+                </button>
+            </div>
+        </form>
+
+        <div class="overflow-x-auto mb-8">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left rounded-tl-lg">ID</th>
+                        <th class="py-3 px-6 text-left">Documento</th>
+                        <th class="py-3 px-6 text-left">Nombre Completo</th>
+                        <th class="py-3 px-6 text-left">Email</th>
+                        <th class="py-3 px-6 text-left">Edad</th>
+                        <th class="py-3 px-6 text-left">Ciudad</th>
+                        <th class="py-3 px-6 text-left">Barrio</th>
+                        <th class="py-3 px-6 text-left">Roles</th>
+                        <th class="py-3 px-left">Salario Base</th>
+                        <th class="py-3 px-6 text-left">Área</th>
+                        <th class="py-3 px-6 text-left">Cargo</th>
+                        <th class="py-3 px-6 text-left">Fecha Contratación</th>
+                        <th class="py-3 px-6 text-center rounded-tr-lg">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="empleadosTableBody" class="text-gray-600 text-sm font-light">
+                    <!-- Los datos de los empleados se cargarán aquí dinámicamente -->
+                    <tr>
+                        <td colspan="13" class="py-4 px-6 text-center">Cargando empleados...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="/" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                Volver a la Página Principal
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Empleado -->
+    <div id="editEmpleadoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeEditModal()">&times;</span>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Editar Empleado</h2>
+            <form id="editEmpleadoForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="hidden" id="editEmpleadoId">
+                <div>
+                    <label for="editDocumento" class="block text-gray-700 text-sm font-bold mb-2">Documento:</label>
+                    <input type="text" id="editDocumento" name="documento" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editNombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+                    <input type="text" id="editNombre" name="nombre" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editApellido" class="block text-gray-700 text-sm font-bold mb-2">Apellido:</label>
+                    <input type="text" id="editApellido" name="apellido" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editEmail" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="editEmail" name="email" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editEdad" class="block text-gray-700 text-sm font-bold mb-2">Edad:</label>
+                    <input type="number" id="editEdad" name="edad" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editCiudad" class="block text-gray-700 text-sm font-bold mb-2">Ciudad:</label>
+                    <input type="text" id="editCiudad" name="ciudad"
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editBarrio" class="block text-gray-700 text-sm font-bold mb-2">Barrio:</label>
+                    <input type="text" id="editBarrio" name="barrio"
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editRoles" class="block text-gray-700 text-sm font-bold mb-2">Roles (separados por coma):</label>
+                    <input type="text" id="editRoles" name="roles"
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editSalarioBase" class="block text-gray-700 text-sm font-bold mb-2">Salario Base:</label>
+                    <input type="number" step="0.01" id="editSalarioBase" name="salarioBase" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editAreaId" class="block text-gray-700 text-sm font-bold mb-2">Área:</label>
+                    <select id="editAreaId" name="areaId" required
+                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="">Seleccione un área</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editCargoId" class="block text-gray-700 text-sm font-bold mb-2">Cargo:</label>
+                    <select id="editCargoId" name="cargoId" required
+                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="">Seleccione un cargo</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editFechaContratacion" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Contratación:</label>
+                    <input type="date" id="editFechaContratacion" name="fechaContratacion" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div class="col-span-full text-center mt-4">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                        Guardar Cambios
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const empleadosTableBody = document.getElementById('empleadosTableBody');
+        const createEmpleadoForm = document.getElementById('createEmpleadoForm');
+        const editEmpleadoModal = document.getElementById('editEmpleadoModal');
+        const editEmpleadoForm = document.getElementById('editEmpleadoForm');
+        const editEmpleadoId = document.getElementById('editEmpleadoId');
+        const editDocumento = document.getElementById('editDocumento');
+        const editNombre = document.getElementById('editNombre');
+        const editApellido = document.getElementById('editApellido');
+        const editEmail = document.getElementById('editEmail');
+        const editEdad = document.getElementById('editEdad');
+        const editCiudad = document.getElementById('editCiudad');
+        const editBarrio = document.getElementById('editBarrio');
+        const editRoles = document.getElementById('editRoles');
+        const editSalarioBase = document.getElementById('editSalarioBase');
+        const editAreaId = document.getElementById('editAreaId');
+        const editCargoId = document.getElementById('editCargoId');
+        const editFechaContratacion = document.getElementById('editFechaContratacion');
+
+        // Función para cargar áreas y cargos para los selectores
+        async function loadSelectOptions() {
+            try {
+                const [areasResponse, cargosResponse] = await Promise.all([
+                    fetch(window.location.origin + '/api/areas'),
+                    fetch(window.location.origin + '/api/cargos')
+                ]);
+
+                const areas = await areasResponse.json();
+                const cargos = await cargosResponse.json();
+
+                const areaSelects = [document.getElementById('areaId'), editAreaId];
+                const cargoSelects = [document.getElementById('cargoId'), editCargoId];
+
+                areaSelects.forEach(select => {
+                    select.innerHTML = '<option value="">Seleccione un área</option>';
+                    areas.forEach(area => {
+                        const option = document.createElement('option');
+                        option.value = area._id;
+                        option.textContent = area.nombre;
+                        select.appendChild(option);
+                    });
+                });
+
+                cargoSelects.forEach(select => {
+                    select.innerHTML = '<option value="">Seleccione un un cargo</option>'; // Corregido: "Seleccione un cargo"
+                    cargos.forEach(cargo => {
+                        const option = document.createElement('option');
+                        option.value = cargo._id;
+                        option.textContent = cargo.nombre;
+                        select.appendChild(option);
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error al cargar opciones de select:', error);
+                alert('Error al cargar áreas y cargos para los selectores.');
+            }
+        }
+
+        // Función para cargar los empleados desde la API
+        async function loadEmpleados() {
+            empleadosTableBody.innerHTML = `<tr><td colspan="13" class="py-4 px-6 text-center">Cargando empleados...</td></tr>`;
+            try {
+                const response = await fetch(window.location.origin + '/api/empleados'); 
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                const empleados = await response.json();
+
+                empleadosTableBody.innerHTML = ''; // Limpiar la tabla
+                if (empleados.length === 0) {
+                    empleadosTableBody.innerHTML = `<tr><td colspan="13" class="py-4 px-6 text-center text-gray-500">No se encontraron empleados.</td></tr>`;
+                    return;
+                }
+
+                empleados.forEach(empleado => {
+                    const row = document.createElement('tr');
+                    row.classList.add('border-b', 'border-gray-200', 'hover:bg-gray-100');
+                    const fechaContratacion = empleado.fechaContratacion ? new Date(empleado.fechaContratacion).toLocaleDateString() : 'N/A';
+                    row.innerHTML = `
+                        <td class="py-3 px-6 text-left whitespace-nowrap">${empleado._id}</td>
+                        <td class="py-3 px-6 text-left">${empleado.documento}</td>
+                        <td class="py-3 px-6 text-left">${empleado.nombre} ${empleado.apellido}</td>
+                        <td class="py-3 px-6 text-left">${empleado.email}</td>
+                        <td class="py-3 px-6 text-left">${empleado.edad}</td>
+                        <td class="py-3 px-6 text-left">${empleado.direccion ? empleado.direccion.ciudad : 'N/A'}</td>
+                        <td class="py-3 px-6 text-left">${empleado.direccion ? empleado.direccion.barrio : 'N/A'}</td>
+                        <td class="py-3 px-6 text-left">${empleado.roles ? empleado.roles.join(', ') : 'N/A'}</td>
+                        <td class="py-3 px-6 text-left">$${empleado.salarioBase ? empleado.salarioBase.toFixed(2) : '0.00'}</td>
+                        <td class="py-3 px-6 text-left">${empleado.area ? empleado.area.nombre : 'N/A'}</td>
+                        <td class="py-3 px-6 text-left">${empleado.cargo ? empleado.cargo.nombre : 'N/A'}</td>
+                        <td class="py-3 px-6 text-left">${fechaContratacion}</td>
+                        <td class="py-3 px-6 text-center">
+                            <button onclick="openEditModal(
+                                '${empleado._id}',
+                                '${empleado.documento}',
+                                '${empleado.nombre}',
+                                '${empleado.apellido}',
+                                '${empleado.email}',
+                                ${empleado.edad},
+                                '${empleado.direccion ? empleado.direccion.ciudad : ''}',
+                                '${empleado.direccion ? empleado.direccion.barrio : ''}',
+                                '${empleado.roles ? empleado.roles.join(',') : ''}',
+                                ${empleado.salarioBase},
+                                '${empleado.areaId}',
+                                '${empleado.cargoId}',
+                                '${empleado.fechaContratacion ? empleado.fechaContratacion.split('T')[0] : ''}'
+                            )"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out mr-2">Editar</button>
+                            <button onclick="deleteEmpleado('${empleado._id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out">Eliminar</button>
+                        </td>
+                    `;
+                    empleadosTableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error al cargar los empleados:', error);
+                empleadosTableBody.innerHTML = `<tr><td colspan="13" class="py-4 px-6 text-center text-red-500">Error al cargar los empleados: ${error.message}</td></tr>`;
+            }
+        }
+
+        // Función para crear un nuevo empleado
+        createEmpleadoForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(createEmpleadoForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Convertir roles a array
+            data.roles = data.roles ? data.roles.split(',').map(r => r.trim()) : [];
+
+            try {
+                const response = await fetch(window.location.origin + '/api/empleados', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+                }
+
+                createEmpleadoForm.reset(); // Limpiar el formulario
+                loadEmpleados(); // Recargar la tabla
+                alert('Empleado creado exitosamente!');
+            } catch (error) {
+                console.error('Error al crear empleado:', error);
+                alert(`Error al crear empleado: ${error.message}`);
+            }
+        });
+
+        // Funciones para el modal de edición
+        function openEditModal(id, documento, nombre, apellido, email, edad, ciudad, barrio, roles, salarioBase, areaId, cargoId, fechaContratacion) {
+            editEmpleadoId.value = id;
+            editDocumento.value = documento;
+            editNombre.value = nombre;
+            editApellido.value = apellido;
+            editEmail.value = email;
+            editEdad.value = edad;
+            editCiudad.value = ciudad;
+            editBarrio.value = barrio;
+            editRoles.value = roles; // Viene como string separado por comas
+            editSalarioBase.value = salarioBase;
+            editAreaId.value = areaId;
+            editCargoId.value = cargoId;
+            editFechaContratacion.value = fechaContratacion; // Formato YYYY-MM-DD
+
+            editEmpleadoModal.style.display = 'flex'; // Mostrar el modal
+        }
+
+        function closeEditModal() {
+            editEmpleadoModal.style.display = 'none'; // Ocultar el modal
+        }
+
+        // Función para actualizar un empleado
+        editEmpleadoForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const id = editEmpleadoId.value;
+            const formData = new FormData(editEmpleadoForm);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Convertir roles a array
+            data.roles = data.roles ? data.roles.split(',').map(r => r.trim()) : [];
+
+            try {
+                const response = await fetch(window.location.origin + `/api/empleados/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+                }
+
+                closeEditModal(); // Cerrar el modal
+                loadEmpleados(); // Recargar la tabla
+                alert('Empleado actualizado exitosamente!');
+            } catch (error) {
+                console.error('Error al actualizar empleado:', error);
+                alert(`Error al actualizar empleado: ${error.message}`);
+            }
+        });
+
+        // Función para eliminar un empleado
+        async function deleteEmpleado(id) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(window.location.origin + `/api/empleados/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+                }
+
+                loadEmpleados(); // Recargar la tabla
+                alert('Empleado eliminado exitosamente!');
+            } catch (error) {
+                console.error('Error al eliminar empleado:', error);
+                alert(`Error al eliminar empleado: ${error.message}`);
+            }
+        }
+
+        // Cargar opciones de select y empleados cuando la página se carga
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadSelectOptions(); // Cargar áreas y cargos primero
+            loadEmpleados(); // Luego cargar los empleados
+        });
+    </script>
+</body>
+</html>

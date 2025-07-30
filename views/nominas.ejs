@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nóminas de Acme Corporate</title>
+    <!-- Carga de Tailwind CSS para estilos rápidos y modernos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Fuente Inter para una mejor legibilidad */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilos para el modal */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed; /* Posición fija para cubrir toda la pantalla */
+            z-index: 1000; /* Por encima de otros elementos */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Habilitar scroll si el contenido es muy grande */
+            background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 800px; /* Más ancho para el formulario de nóminas */
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .concept-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .concept-item input {
+            flex-grow: 1;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-6xl w-full">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Nóminas de Acme Corporate</h1>
+        
+        <!-- Formulario para Crear Nueva Nómina -->
+        <form id="createNominaForm" class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4 col-span-full">Crear Nueva Nómina</h2>
+            
+            <div>
+                <label for="empleadoId" class="block text-gray-700 text-sm font-bold mb-2">Empleado:</label>
+                <select id="empleadoId" name="empleadoId" required
+                        class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Seleccione un empleado</option>
+                </select>
+            </div>
+            <div>
+                <label for="periodo" class="block text-gray-700 text-sm font-bold mb-2">Periodo:</label>
+                <input type="text" id="periodo" name="periodo" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       placeholder="Ej: 2023-01">
+            </div>
+            <div>
+                <label for="fechaEmision" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Emisión:</label>
+                <input type="date" id="fechaEmision" name="fechaEmision" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="salarioBruto" class="block text-gray-700 text-sm font-bold mb-2">Salario Bruto:</label>
+                <input type="number" step="0.01" id="salarioBruto" name="salarioBruto" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+
+            <div class="col-span-full">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Devengos:</h3>
+                <div id="createDevengosContainer">
+                    <!-- Devengos se añadirán aquí -->
+                </div>
+                <button type="button" onclick="addConceptField('createDevengosContainer', 'devengos')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-2 rounded-lg text-sm mt-2">Añadir Devengo</button>
+            </div>
+
+            <div class="col-span-full">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Deducciones:</h3>
+                <div id="createDeduccionesContainer">
+                    <!-- Deducciones se añadirán aquí -->
+                </div>
+                <button type="button" onclick="addConceptField('createDeduccionesContainer', 'deducciones')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-2 rounded-lg text-sm mt-2">Añadir Deducción</button>
+            </div>
+
+            <div class="col-span-full text-center mt-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    Añadir Nómina
+                </button>
+            </div>
+        </form>
+
+        <div class="overflow-x-auto mb-8">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left rounded-tl-lg">ID</th>
+                        <th class="py-3 px-6 text-left">Periodo</th>
+                        <th class="py-3 px-6 text-left">Fecha Emisión</th>
+                        <th class="py-3 px-6 text-left">Empleado</th>
+                        <th class="py-3 px-6 text-left">Salario Bruto</th>
+                        <th class="py-3 px-6 text-left">Total Devengos</th>
+                        <th class="py-3 px-6 text-left">Total Deducciones</th>
+                        <th class="py-3 px-6 text-left">Salario Neto</th>
+                        <th class="py-3 px-6 text-center rounded-tr-lg">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="nominasTableBody" class="text-gray-600 text-sm font-light">
+                    <!-- Los datos de las nóminas se cargarán aquí dinámicamente -->
+                    <tr>
+                        <td colspan="9" class="py-4 px-6 text-center">Cargando nóminas...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="/" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                Volver a la Página Principal
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Nómina -->
+    <div id="editNominaModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeEditModal()">&times;</span>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Editar Nómina</h2>
+            <form id="editNominaForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="hidden" id="editNominaId">
+                <div>
+                    <label for="editEmpleadoId" class="block text-gray-700 text-sm font-bold mb-2">Empleado:</label>
+                    <select id="editEmpleadoId" name="empleadoId" required
+                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="">Seleccione un empleado</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editPeriodo" class="block text-gray-700 text-sm font-bold mb-2">Periodo:</label>
+                    <input type="text" id="editPeriodo" name="periodo" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editFechaEmision" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Emisión:</label>
+                    <input type="date" id="editFechaEmision" name="fechaEmision" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="editSalarioBruto" class="block text-gray-700 text-sm font-bold mb-2">Salario Bruto:</label>
+                    <input type="number" step="0.01" id="editSalarioBruto" name="salarioBruto" required
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div class="col-span-full">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Devengos:</h3>
+                    <div id="editDevengosContainer">
+                        <!-- Devengos de edición se añadirán aquí -->
+                    </div>
+                    <button type="button" onclick="addConceptField('editDevengosContainer', 'devengos', true)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-2 rounded-lg text-sm mt-2">Añadir Devengo</button>
+                </div>
+
+                <div class="col-span-full">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Deducciones:</h3>
+                    <div id="editDeduccionesContainer">
+                        <!-- Deducciones de edición se añadirán aquí -->
+                    </div>
+                    <button type="button" onclick="addConceptField('editDeduccionesContainer', 'deducciones', true)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-2 rounded-lg text-sm mt-2">Añadir Deducción</button>
+                </div>
+
+                <div class="col-span-full text-center mt-4">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                        Guardar Cambios
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const nominasTableBody = document.getElementById('nominasTableBody');
+        const createNominaForm = document.getElementById('createNominaForm');
+        const editNominaModal = document.getElementById('editNominaModal');
+        const editNominaForm = document.getElementById('editNominaForm');
+        const editNominaId = document.getElementById('editNominaId');
+        const editEmpleadoId = document.getElementById('editEmpleadoId');
+        const editPeriodo = document.getElementById('editPeriodo');
+        const editFechaEmision = document.getElementById('editFechaEmision');
+        const editSalarioBruto = document.getElementById('editSalarioBruto');
+        const createDevengosContainer = document.getElementById('createDevengosContainer');
+        const createDeduccionesContainer = document.getElementById('createDeduccionesContainer');
+        const editDevengosContainer = document.getElementById('editDevengosContainer');
+        const editDeduccionesContainer = document.getElementById('editDeduccionesContainer');
+
+        // Función para cargar empleados para los selectores
+        async function loadEmpleadoOptions() {
+            try {
+                const response = await fetch(window.location.origin + '/api/empleados');
+                const empleados = await response.json();
+
+                const empleadoSelects = [document.getElementById('empleadoId'), editEmpleadoId];
+
+                empleadoSelects.forEach(select => {
+                    select.innerHTML = '<option value="">Seleccione un empleado</option>';
+                    empleados.forEach(empleado => {
+                        const option = document.createElement('option');
+                        option.value = empleado._id;
+                        option.textContent = `${empleado.nombre} ${empleado.apellido} (${empleado.documento})`;
+                        select.appendChild(option);
+                    });
+                });
+            } catch (error) {
+                console.error('Error al cargar opciones de empleados:', error);
+                alert('Error al cargar empleados para los selectores.');
+            }
+        }
+
+        // Función para añadir campos de concepto (devengos/deducciones)
+        function addConceptField(containerId, type, isEdit = false, concept = { concepto: '', valor: '', _id: '' }) {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.classList.add('concept-item');
+            div.innerHTML = `
+                <input type="text" placeholder="Concepto" value="${concept.concepto}"
+                       class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+                       name="${type}Concept">
+                <input type="number" step="0.01" placeholder="Valor" value="${concept.valor}"
+                       class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       name="${type}Value">
+                ${isEdit && concept._id ? `<input type="hidden" name="${type}Id" value="${concept._id}">` : ''}
+                <button type="button" onclick="this.parentElement.remove()" class="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-2 rounded-lg text-sm ml-2">X</button>
+            `;
+            container.appendChild(div);
+        }
+
+        // Función para cargar las nóminas desde la API
+        async function loadNominas() {
+            nominasTableBody.innerHTML = `<tr><td colspan="9" class="py-4 px-6 text-center">Cargando nóminas...</td></tr>`;
+            try {
+                const response = await fetch(window.location.origin + '/api/nominas'); 
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                const nominas = await response.json();
+
+                nominasTableBody.innerHTML = ''; // Limpiar la tabla
+                if (nominas.length === 0) {
+                    nominasTableBody.innerHTML = `<tr><td colspan="9" class="py-4 px-6 text-center text-gray-500">No se encontraron nóminas.</td></tr>`;
+                    return;
+                }
+
+                nominas.forEach(nomina => {
+                    const row = document.createElement('tr');
+                    row.classList.add('border-b', 'border-gray-200', 'hover:bg-gray-100');
+                    const fechaEmision = nomina.fechaEmision ? new Date(nomina.fechaEmision).toLocaleDateString() : 'N/A';
+                    row.innerHTML = `
+                        <td class="py-3 px-6 text-left whitespace-nowrap">${nomina._id}</td>
+                        <td class="py-3 px-6 text-left">${nomina.periodo}</td>
+                        <td class="py-3 px-6 text-left">${fechaEmision}</td>
+                        <td class="py-3 px-6 text-left">${nomina.empleado ? nomina.empleado.nombre + ' ' + nomina.empleado.apellido : 'N/A'}</td>
+                        <td class="py-3 px-6 text-left">$${nomina.salarioBruto ? nomina.salarioBruto.toFixed(2) : '0.00'}</td>
+                        <td class="py-3 px-6 text-left">$${nomina.totalDevengos ? nomina.totalDevengos.toFixed(2) : '0.00'}</td>
+                        <td class="py-3 px-6 text-left">$${nomina.totalDeducciones ? nomina.totalDeducciones.toFixed(2) : '0.00'}</td>
+                        <td class="py-3 px-6 text-left">$${nomina.salarioNeto ? nomina.salarioNeto.toFixed(2) : '0.00'}</td>
+                        <td class="py-3 px-6 text-center">
+                            <button onclick="openEditModal(
+                                '${nomina._id}',
+                                '${nomina.empleadoId}',
+                                '${nomina.periodo}',
+                                '${nomina.fechaEmision ? nomina.fechaEmision.split('T')[0] : ''}',
+                                ${nomina.salarioBruto},
+                                ${JSON.stringify(nomina.devengos || [])},
+                                ${JSON.stringify(nomina.deducciones || [])}
+                            )"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out mr-2">Editar</button>
+                            <button onclick="deleteNomina('${nomina._id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out">Eliminar</button>
+                        </td>
+                    `;
+                    nominasTableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error al cargar las nóminas:', error);
+                nominasTableBody.innerHTML = `<tr><td colspan="9" class="py-4 px-6 text-center text-red-500">Error al cargar las nóminas: ${error.message}</td></tr>`;
+            }
+        }
+
+        // Función para crear una nueva nómina
+        createNominaForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(createNominaForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Procesar devengos y deducciones
+            const devengos = [];
+            const deducciones = [];
+
+            // Recorrer los campos de concepto y valor para devengos
+            createNominaForm.querySelectorAll('#createDevengosContainer .concept-item').forEach(item => {
+                const concepto = item.querySelector('[name="devengosConcept"]').value;
+                const valor = item.querySelector('[name="devengosValue"]').value;
+                if (concepto && valor) {
+                    devengos.push({ concepto, valor: parseFloat(valor) });
+                }
+            });
+
+            // Recorrer los campos de concepto y valor para deducciones
+            createNominaForm.querySelectorAll('#createDeduccionesContainer .concept-item').forEach(item => {
+                const concepto = item.querySelector('[name="deduccionesConcept"]').value;
+                const valor = item.querySelector('[name="deduccionesValue"]').value;
+                if (concepto && valor) {
+                    deducciones.push({ concepto, valor: parseFloat(valor) });
+                }
+            });
+
+            data.devengos = devengos;
+            data.deducciones = deducciones;
+
+            try {
+                const response = await fetch(window.location.origin + '/api/nominas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+                }
+
+                createNominaForm.reset(); // Limpiar el formulario
+                createDevengosContainer.innerHTML = ''; // Limpiar devengos
+                createDeduccionesContainer.innerHTML = ''; // Limpiar deducciones
+                loadNominas(); // Recargar la tabla
+                alert('Nómina creada exitosamente!');
+            } catch (error) {
+                console.error('Error al crear nómina:', error);
+                alert(`Error al crear nómina: ${error.message}`);
+            }
+        });
+
+        // Funciones para el modal de edición
+        function openEditModal(id, empleadoId, periodo, fechaEmision, salarioBruto, devengos, deducciones) {
+            editNominaId.value = id;
+            editEmpleadoId.value = empleadoId;
+            editPeriodo.value = periodo;
+            editFechaEmision.value = fechaEmision; // Formato YYYY-MM-DD
+            editSalarioBruto.value = salarioBruto;
+
+            // Limpiar y cargar devengos existentes
+            editDevengosContainer.innerHTML = '';
+            devengos.forEach(d => addConceptField('editDevengosContainer', 'devengos', true, d));
+
+            // Limpiar y cargar deducciones existentes
+            editDeduccionesContainer.innerHTML = '';
+            deducciones.forEach(d => addConceptField('editDeduccionesContainer', 'deducciones', true, d));
+
+            editNominaModal.style.display = 'flex'; // Mostrar el modal
+        }
+
+        function closeEditModal() {
+            editNominaModal.style.display = 'none'; // Ocultar el modal
+        }
+
+        // Función para actualizar una nómina
+        editNominaForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const id = editNominaId.value;
+            const formData = new FormData(editNominaForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Procesar devengos y deducciones del formulario de edición
+            const devengos = [];
+            const deducciones = [];
+
+            editNominaForm.querySelectorAll('#editDevengosContainer .concept-item').forEach(item => {
+                const concepto = item.querySelector('[name="devengosConcept"]').value;
+                const valor = item.querySelector('[name="devengosValue"]').value;
+                const conceptId = item.querySelector('[name="devengosId"]') ? item.querySelector('[name="devengosId"]').value : '';
+                if (concepto && valor) {
+                    devengos.push({ _id: conceptId, concepto, valor: parseFloat(valor) });
+                }
+            });
+
+            editNominaForm.querySelectorAll('#editDeduccionesContainer .concept-item').forEach(item => {
+                const concepto = item.querySelector('[name="deduccionesConcept"]').value;
+                const valor = item.querySelector('[name="deduccionesValue"]').value;
+                const conceptId = item.querySelector('[name="deduccionesId"]') ? item.querySelector('[name="deduccionesId"]').value : '';
+                if (concepto && valor) {
+                    deducciones.push({ _id: conceptId, concepto, valor: parseFloat(valor) });
+                }
+            });
+
+            data.devengos = devengos;
+            data.deducciones = deducciones;
+
+            try {
+                const response = await fetch(window.location.origin + `/api/nominas/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+                }
+
+                closeEditModal(); // Cerrar el modal
+                loadNominas(); // Recargar la tabla
+                alert('Nómina actualizada exitosamente!');
+            } catch (error) {
+                console.error('Error al actualizar nómina:', error);
+                alert(`Error al actualizar nómina: ${error.message}`);
+            }
+        });
+
+        // Función para eliminar una nómina
+        async function deleteNomina(id) {
+            if (!confirm('¿Estás seguro de que quieres eliminar esta nómina?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(window.location.origin + `/api/nominas/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+                }
+
+                loadNominas(); // Recargar la tabla
+                alert('Nómina eliminada exitosamente!');
+            } catch (error) {
+                console.error('Error al eliminar nómina:', error);
+                alert(`Error al eliminar nómina: ${error.message}`);
+            }
+        }
+
+        // Cargar opciones de empleados y nóminas cuando la página se carga
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadEmpleadoOptions(); // Cargar empleados primero
+            loadNominas(); // Luego cargar las nóminas
+        });
+    </script>
+</body>
+</html>

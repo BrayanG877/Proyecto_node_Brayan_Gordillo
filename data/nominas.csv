@@ -1,0 +1,6 @@
+documentoEmpleado,periodo,fechaEmision,devengosConcepto1,devengosValor1,devengosConcepto2,devengosValor2,deduccionesConcepto1,deduccionesValor1,deduccionesConcepto2,deduccionesValor2
+1001,2024-07,2024-07-30,Bonificacion,200000,Comision,100000,Salud,80000,Pension,100000
+1002,2024-07,2024-07-30,Horas Extra,150000,,,"Salud",70000,"Pension",90000
+1003,2024-07,2024-07-30,Bonificacion,300000,,,"Salud",100000,"Pension",120000
+1004,2024-07,2024-07-30,Comision,50000,,,"Salud",60000,"Pension",80000
+1005,2024-07,2024-07-30,Transporte,100000,,,"Salud",75000,"Pension",95000
