@@ -1,29 +1,27 @@
-// 1. Cargar variables de entorno al inicio de la aplicación
+//cargar variables de entorno 
 require('dotenv').config();
 
-// 2. Importar módulos
-// Módulos nativos de Node.js
+//importar modulos
 const path = require('path');
-
-// Módulos de terceros (instalados con npm)
 const express = require('express');
 const { MongoClient } = require('mongodb'); 
 
-// Módulos locales de tu proyecto
+// modulos locales
 const etlService = require('./services/etlService');
-const areasRutas = require('./rutas/areasRutas'); // Asegúrate que el nombre de la variable coincide con el archivo
-const cargosRutas = require('./rutas/cargosRutas'); // Asegúrate que el nombre de la variable coincide con el archivo
-const empleadosRutas = require('./rutas/empleadosRutas'); // Nueva importación
-const nominasRutas = require('./rutas/nominasRutas'); // Nueva importación
-// 3. Crear una instancia de la aplicación Express
+const areasRutas = require('./rutas/areasRutas'); 
+const cargosRutas = require('./rutas/cargosRutas'); 
+const empleadosRutas = require('./rutas/empleadosRutas'); 
+const nominasRutas = require('./rutas/nominasRutas'); 
+
+//instanciar la aplicación Express
 const app = express();
 
-// 4. Configuración de la aplicación (Puerto y Conexión a DB)
+//puerto y conexion con mongo
 const PORT = process.env.PORT || 3000;
 const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri); // Cliente MongoDB
+const client = new MongoClient(uri);
 
-// 5. Función para conectar a la base de datos MongoDB
+//conectar a mongo
 async function connectDB() {
     try {
         await client.connect();
@@ -31,79 +29,72 @@ async function connectDB() {
         console.log("Conectado exitosamente a la base de datos!");
     } catch (error) {
         console.error("Error al conectar con la base de datos:", error);
-        process.exit(1); // Salir si la conexión falla es crítica para una app de DB
+        process.exit(1); 
     }
 }
 
-// 6. Configuración del motor de plantillas y vistas
+//vistas(frontend)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// 7. Middlewares para procesar solicitudes HTTP
-app.use(express.urlencoded({ extended: true })); // Para datos de formularios HTML
-app.use(express.json()); // Para datos JSON
-app.use(express.static(path.join(__dirname, 'public'))); // Para servir archivos estáticos (CSS, JS del frontend, imágenes)
+//procesar solicitudes
+app.use(express.urlencoded({ extended: true }));  //formularios html
+app.use(express.json());               // Para datos json
+app.use(express.static(path.join(__dirname, 'public')));//archivos estaticos
 
-// 8. Inicializar y Usar las Rutas de la API
-// Es crucial que esto esté ANTES de cualquier ruta general como app.get('/')
-areasRutas.init(client); // Inicializa el enrutador de áreas con el cliente de MongoDB
-cargosRutas.init(client); // Inicializa el enrutador de cargos con el cliente de MongoDB
-empleadosRutas.init(client); // Inicializa el enrutador de empleados con el cliente de MongoDB
-nominasRutas.init(client); // Inicializa el enrutador de nóminas con el cliente de MongoDB
 
-// Todas las rutas definidas en areasRutas.js y cargosRutas.js
-// serán accesibles bajo el prefijo /api
+//inizializar y usar las rutas api
+areasRutas.init(client); 
+cargosRutas.init(client); 
+empleadosRutas.init(client); 
+nominasRutas.init(client); 
+
+//todo dentro de rutas sera accesible con api
 app.use('/api', areasRutas.router);
 app.use('/api', cargosRutas.router);
 app.use('/api', empleadosRutas.router); 
 app.use('/api', nominasRutas.router);
 
-// 9. Rutas de prueba y principales
-// Ruta de prueba API para verificar el prefijo /api (puedes quitarla después de verificar)
-app.get('/api/test', (req, res) => {
-    res.json({ message: "API de prueba funcionando correctamente!" });
-});
 
-// Ruta para la página de visualización de áreas
+//pagina de areas
 app.get('/areas-page', (req, res) => {
-    res.render('areas'); // Renderiza el archivo areas.ejs
+    res.render('areas'); 
 });
-// Ruta para la página de visualización de nominas
+//pagina de nominas
 app.get('/nominas-page', (req, res) => {
-    res.render('nominas'); // Renderiza el archivo nominas.ejs
+    res.render('nominas'); 
 });
 
-// Ruta para la página de visualización de cargos
+//pagina de cargos
 app.get('/cargos-page', (req, res) => {
-    res.render('cargos'); // Renderiza el archivo cargos.ejs
+    res.render('cargos'); 
 });
 
-// Ruta para la página de visualización de empleados
+//pagina de empleados
 app.get('/empleados-page', (req, res) => {
-    res.render('empleados'); // Renderiza el archivo empleados.ejs
+    res.render('empleados');
 });
 
-// Ruta principal para la página de inicio (debe ir DESPUÉS de las rutas API más específicas)
+//ruta pagina de inicio 
 app.get('/', (req, res) => {
     res.render('index', { title: 'Acme Corporate' });
 });
 
-// 10. Iniciar el servidor
-// Primero intenta conectar a la base de datos, luego carga los datos ETL, y finalmente inicia el servidor Express
+//iniciar el server
 connectDB().then(async () => {
     try {
         console.log("[ETL] Iniciando proceso de carga de datos...");
-        // Cargar áreas y cargos (ids)
+        //carga areas y cargos (ids)
         const areaMap = await etlService.loadAreas(client);
         const cargoMap = await etlService.loadCargos(client);
-        // Cargar empleados
+        //carga empleados
         await etlService.loadEmpleados(client, areaMap, cargoMap);
-        // Cargar nóminas
+        //carga nominas
         await etlService.loadNominas(client);
         console.log("[ETL] Proceso de carga de datos completado exitosamente.");
         
         app.listen(PORT, () => {
-            console.log(`Cargando servidor.... ${PORT}`);
+            console.log(`Cargando servidor, esperese prb.... ${PORT}`);
             console.log(`Abrir en el navegador: http://localhost:${PORT}`);
         });
     } catch (etlError) {
