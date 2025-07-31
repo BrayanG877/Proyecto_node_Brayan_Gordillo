@@ -1,14 +1,359 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #2f2f30; /* Azul muy muy claro */
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #53565c; 
+    position: relative; 
 }
-h1 {
-    color: #2c658b; /* Rojo brillante */
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://p4.wallpaperbetter.com/wallpaper/30/591/633/hanamura-overwatch-video-games-cherry-blossom-blizzard-entertainment-wallpaper-preview.jpg'); /* Asegúrate de que la URL sea accesible */
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.9); 
+    z-index: -1; 
+}
+
+.page-wrapper {
+    width: 95%; 
+    max-width: 1200px; 
+    padding: 20px; 
+    z-index: 1; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 20px;
+}
+
+.content-grid {
+    display: grid; /* Usa CSS Grid */
+    grid-template-columns: 1fr; /* Una columna por defecto (para móviles) */
+    gap: 25px; /* Espacio entre las columnas/filas */
+    width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+@media (min-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr 2fr; /* Columna de formulario (1 parte) y columna de tabla (2 partes) */
+    }
+    /* Ajuste para que el contenedor principal sea más ancho en pantallas grandes */
+    .page-wrapper {
+        max-width: 1600px; /* AUMENTADO el ancho máximo para dar más espacio al título y contenido */
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 400px; 
+    padding: 20px;
+    z-index: 1;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.15); 
+    backdrop-filter: blur(8px); 
+    border-radius: 16px; 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); 
+    color: white; 
+    padding: 30px; 
     text-align: center;
-    font-size: 3em;
-    border: #2c658b solid 2px;
+    animation: fadeIn 0.6s ease-in-out; 
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    font-size: 2.2em; 
+    margin-bottom: 10px;
+    color: white; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
+}
+
+h2 {
+    font-size: 1.5em; 
+    margin-bottom: 20px;
+    color: #a8dadc; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
 p {
-    color: #008000; /* Verde oscuro */
+    font-size: 1em;
+    margin-bottom: 30px;
+    color: #e0e0e0; 
+}
+
+.nav-links {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+    margin-top: 20px; 
+    max-width: 1600px; 
+}
+
+.btn {
+    display: block; 
+    background-color: rgba(255, 255, 255, 0.15); 
+    color: white;
+    padding: 15px 20px; 
+    border: 1px solid rgba(255, 255, 255, 0.3); 
+    border-radius: 10px; 
+    font-size: 1.1em;
     font-weight: bold;
+    text-decoration: none; 
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.btn:hover {
+    background-color: rgba(162, 39, 121, 0.619); 
+    transform: translateY(-3px); 
+    border-color: rgba(168, 17, 135, 0.951); 
+    box-shadow: 5px 5px 5px rgb(108, 1, 83); 
+}
+
+@media (max-width: 600px) {
+    .nav-links {
+        grid-template-columns: 1fr; 
+    }
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); 
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 500px; 
+}
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.concept-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.concept-item input {
+    flex-grow: 1;
+    margin-right: 8px;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    margin-bottom: 30px;
+    color: white;
+}
+
+.form-section h2 {
+    color: white;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #e0e0e0;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #a8dadc;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-submit-btn {
+    background-color: rgba(76, 175, 80, 0.7); 
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-submit-btn:hover {
+    background-color: rgba(67, 160, 71, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    overflow: hidden; 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    color: white; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-table thead th {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05); 
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+}
+
+.data-table .action-buttons button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.data-table .action-buttons button.edit-btn:hover {
+    background-color: rgba(255, 193, 7, 0.7); 
+    transform: translateY(-1px);
+}
+
+.data-table .action-buttons button.delete-btn:hover {
+    background-color: rgba(220, 53, 69, 0.7); 
+    transform: translateY(-1px);
+}
+
+.table-message {
+    text-align: center;
+    padding: 20px;
+    color: white;
+    font-style: italic;
+}
+
+.table-error {
+    color: #ff4d4d; 
+    font-weight: bold;
+}
+
+
+.back-to-main-btn {
+    display: inline-block;
+    background-color: rgba(0, 123, 255, 0.7); 
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+}
+
+.back-to-main-btn:hover {
+    background-color: rgba(0, 105, 217, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content.large {
+    max-width: 800px;
+}
+
+.modal-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .modal-form-grid {
+        grid-template-columns: 1fr; 
+    }
 }

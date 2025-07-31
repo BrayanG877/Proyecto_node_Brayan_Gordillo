@@ -4,160 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Empleados de Acme Corporate</title>
-    <!-- Carga de Tailwind CSS para estilos rápidos y modernos -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Fuente Inter para una mejor legibilidad */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Estilos para el modal */
-        .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed; /* Posición fija para cubrir toda la pantalla */
-            z-index: 1000; /* Por encima de otros elementos */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Habilitar scroll si el contenido es muy grande */
-            background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 700px; /* Más ancho para el formulario de empleados */
-        }
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <!-- Enlace a tu archivo CSS personalizado -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-6xl w-full">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Empleados de Acme Corporate</h1>
+<body>
+    <div class="background"></div>
+    <div class="page-wrapper"> <!-- Contenedor principal de la página -->
+        <h1 class="page-main-title">Empleados de Acme Corporate</h1> <!-- Título principal de la página -->
         
-        <!-- Formulario para Crear Nuevo Empleado -->
-        <form id="createEmpleadoForm" class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner grid grid-cols-1 md:grid-cols-2 gap-4">
-            <h2 class="text-xl font-semibold text-blue-700 mb-4 col-span-full">Crear Nuevo Empleado</h2>
-            
-            <div>
-                <label for="documento" class="block text-gray-700 text-sm font-bold mb-2">Documento:</label>
-                <input type="text" id="documento" name="documento" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="apellido" class="block text-gray-700 text-sm font-bold mb-2">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                <input type="email" id="email" name="email" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="edad" class="block text-gray-700 text-sm font-bold mb-2">Edad:</label>
-                <input type="number" id="edad" name="edad" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="ciudad" class="block text-gray-700 text-sm font-bold mb-2">Ciudad:</label>
-                <input type="text" id="ciudad" name="ciudad"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="barrio" class="block text-gray-700 text-sm font-bold mb-2">Barrio:</label>
-                <input type="text" id="barrio" name="barrio"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="roles" class="block text-gray-700 text-sm font-bold mb-2">Roles (separados por coma):</label>
-                <input type="text" id="roles" name="roles"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="salarioBase" class="block text-gray-700 text-sm font-bold mb-2">Salario Base:</label>
-                <input type="number" step="0.01" id="salarioBase" name="salarioBase" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div>
-                <label for="areaId" class="block text-gray-700 text-sm font-bold mb-2">Área:</label>
-                <select id="areaId" name="areaId" required
-                        class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione un área</option>
-                </select>
-            </div>
-            <div>
-                <label for="cargoId" class="block text-gray-700 text-sm font-bold mb-2">Cargo:</label>
-                <select id="cargoId" name="cargoId" required
-                        class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione un cargo</option>
-                </select>
-            </div>
-            <div>
-                <label for="fechaContratacion" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Contratación:</label>
-                <input type="date" id="fechaContratacion" name="fechaContratacion" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
+        <div class="content-grid"> <!-- Contenedor para organizar el formulario y la tabla lado a lado -->
+            <!-- Formulario para Crear Nuevo Empleado -->
+            <form id="createEmpleadoForm" class="form-section glass-card modal-form-grid"> <!-- 'glass-card' aplicado aquí -->
+                <h2>Crear Nuevo Empleado</h2>
+                
+                <div class="form-group">
+                    <label for="documento">Documento:</label>
+                    <input type="text" id="documento" name="documento" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellido">Apellido:</label>
+                    <input type="text" id="apellido" name="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="edad">Edad:</label>
+                    <input type="number" id="edad" name="edad" required>
+                </div>
+                <div class="form-group">
+                    <label for="ciudad">Ciudad:</label>
+                    <input type="text" id="ciudad" name="ciudad">
+                </div>
+                <div class="form-group">
+                    <label for="barrio">Barrio:</label>
+                    <input type="text" id="barrio" name="barrio">
+                </div>
+                <div class="form-group">
+                    <label for="roles">Roles (separados por coma):</label>
+                    <input type="text" id="roles" name="roles">
+                </div>
+                <div class="form-group">
+                    <label for="salarioBase">Salario Base:</label>
+                    <input type="number" step="0.01" id="salarioBase" name="salarioBase" required>
+                </div>
+                <div class="form-group">
+                    <label for="areaId">Área:</label>
+                    <select id="areaId" name="areaId" required>
+                        <option value="">Seleccione un área</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cargoId">Cargo:</label>
+                    <select id="cargoId" name="cargoId" required>
+                        <option value="">Seleccione un cargo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fechaContratacion">Fecha de Contratación:</label>
+                    <input type="date" id="fechaContratacion" name="fechaContratacion" required>
+                </div>
 
-            <div class="col-span-full text-center mt-4">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
-                    Añadir Empleado
-                </button>
-            </div>
-        </form>
+                <div class="form-group full-width text-center"> <!-- Clase 'full-width' y 'text-center' -->
+                    <button type="submit" class="form-submit-btn">
+                        Añadir Empleado
+                    </button>
+                </div>
+            </form>
 
-        <div class="overflow-x-auto mb-8">
-            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead>
-                    <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left rounded-tl-lg">ID</th>
-                        <th class="py-3 px-6 text-left">Documento</th>
-                        <th class="py-3 px-6 text-left">Nombre Completo</th>
-                        <th class="py-3 px-6 text-left">Email</th>
-                        <th class="py-3 px-6 text-left">Edad</th>
-                        <th class="py-3 px-6 text-left">Ciudad</th>
-                        <th class="py-3 px-6 text-left">Barrio</th>
-                        <th class="py-3 px-6 text-left">Roles</th>
-                        <th class="py-3 px-left">Salario Base</th>
-                        <th class="py-3 px-6 text-left">Área</th>
-                        <th class="py-3 px-6 text-left">Cargo</th>
-                        <th class="py-3 px-6 text-left">Fecha Contratación</th>
-                        <th class="py-3 px-6 text-center rounded-tr-lg">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="empleadosTableBody" class="text-gray-600 text-sm font-light">
-                    <!-- Los datos de los empleados se cargarán aquí dinámicamente -->
-                    <tr>
-                        <td colspan="13" class="py-4 px-6 text-center">Cargando empleados...</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Tabla de Empleados -->
+            <div class="table-section glass-card"> <!-- 'glass-card' aplicado aquí -->
+                <h2>Empleados Existentes</h2> <!-- Título para la tabla -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Documento</th>
+                                <th>Nombre Completo</th>
+                                <th>Email</th>
+                                <th>Edad</th>
+                                <th>Ciudad</th>
+                                <th>Barrio</th>
+                                <th>Roles</th>
+                                <th>Salario Base</th>
+                                <th>Área</th>
+                                <th>Cargo</th>
+                                <th>Fecha Contratación</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empleadosTableBody">
+                            <!-- Los datos de los empleados se cargarán aquí dinámicamente -->
+                            <tr>
+                                <td colspan="13" class="table-message">Cargando empleados...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="mt-8 text-center">
-            <a href="/" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+        <div class="back-button-wrapper"> <!-- Contenedor para el botón de volver -->
+            <a href="/" class="back-to-main-btn">
                 Volver a la Página Principal
             </a>
         </div>
@@ -165,81 +119,69 @@
 
     <!-- Modal para Editar Empleado -->
     <div id="editEmpleadoModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content large">
             <span class="close-button" onclick="closeEditModal()">&times;</span>
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Editar Empleado</h2>
-            <form id="editEmpleadoForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2>Editar Empleado</h2>
+            <form id="editEmpleadoForm" class="modal-form-grid">
                 <input type="hidden" id="editEmpleadoId">
-                <div>
-                    <label for="editDocumento" class="block text-gray-700 text-sm font-bold mb-2">Documento:</label>
-                    <input type="text" id="editDocumento" name="documento" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editDocumento">Documento:</label>
+                    <input type="text" id="editDocumento" name="documento" required>
                 </div>
-                <div>
-                    <label for="editNombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                    <input type="text" id="editNombre" name="nombre" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editNombre">Nombre:</label>
+                    <input type="text" id="editNombre" name="nombre" required>
                 </div>
-                <div>
-                    <label for="editApellido" class="block text-gray-700 text-sm font-bold mb-2">Apellido:</label>
-                    <input type="text" id="editApellido" name="apellido" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editApellido">Apellido:</label>
+                    <input type="text" id="editApellido" name="apellido" required>
                 </div>
-                <div>
-                    <label for="editEmail" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                    <input type="email" id="editEmail" name="email" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editEmail">Email:</label>
+                    <input type="email" id="editEmail" name="email" required>
                 </div>
-                <div>
-                    <label for="editEdad" class="block text-gray-700 text-sm font-bold mb-2">Edad:</label>
-                    <input type="number" id="editEdad" name="edad" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editEdad">Edad:</label>
+                    <input type="number" id="editEdad" name="edad" required>
                 </div>
-                <div>
-                    <label for="editCiudad" class="block text-gray-700 text-sm font-bold mb-2">Ciudad:</label>
-                    <input type="text" id="editCiudad" name="ciudad"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editCiudad">Ciudad:</label>
+                    <input type="text" id="editCiudad" name="ciudad">
                 </div>
-                <div>
-                    <label for="editBarrio" class="block text-gray-700 text-sm font-bold mb-2">Barrio:</label>
-                    <input type="text" id="editBarrio" name="barrio"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editBarrio">Barrio:</label>
+                    <input type="text" id="editBarrio" name="barrio">
                 </div>
-                <div>
-                    <label for="editRoles" class="block text-gray-700 text-sm font-bold mb-2">Roles (separados por coma):</label>
-                    <input type="text" id="editRoles" name="roles"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editRoles">Roles (separados por coma):</label>
+                    <input type="text" id="editRoles" name="roles">
                 </div>
-                <div>
-                    <label for="editSalarioBase" class="block text-gray-700 text-sm font-bold mb-2">Salario Base:</label>
-                    <input type="number" step="0.01" id="editSalarioBase" name="salarioBase" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editSalarioBase">Salario Base:</label>
+                    <input type="number" step="0.01" id="editSalarioBase" name="salarioBase" required>
                 </div>
-                <div>
-                    <label for="editAreaId" class="block text-gray-700 text-sm font-bold mb-2">Área:</label>
-                    <select id="editAreaId" name="areaId" required
-                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editAreaId">Área:</label>
+                    <select id="editAreaId" name="areaId" required>
                         <option value="">Seleccione un área</option>
                     </select>
                 </div>
-                <div>
-                    <label for="editCargoId" class="block text-gray-700 text-sm font-bold mb-2">Cargo:</label>
-                    <select id="editCargoId" name="cargoId" required
-                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editCargoId">Cargo:</label>
+                    <select id="editCargoId" name="cargoId" required>
                         <option value="">Seleccione un cargo</option>
                     </select>
                 </div>
-                <div>
-                    <label for="editFechaContratacion" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Contratación:</label>
-                    <input type="date" id="editFechaContratacion" name="fechaContratacion" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editFechaContratacion">Fecha de Contratación:</label>
+                    <input type="date" id="editFechaContratacion" name="fechaContratacion" required>
                 </div>
 
-                <div class="col-span-full text-center mt-4">
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                <div class="form-group full-width text-center">
+                    <button type="submit" class="form-submit-btn">
                         Guardar Cambios
                     </button>
-                    <button type="button" onclick="closeEditModal()" class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <button type="button" onclick="closeEditModal()" class="form-submit-btn cancel-btn">
                         Cancelar
                     </button>
                 </div>
@@ -291,7 +233,7 @@
                 });
 
                 cargoSelects.forEach(select => {
-                    select.innerHTML = '<option value="">Seleccione un un cargo</option>'; // Corregido: "Seleccione un cargo"
+                    select.innerHTML = '<option value="">Seleccione un cargo</option>';
                     cargos.forEach(cargo => {
                         const option = document.createElement('option');
                         option.value = cargo._id;
@@ -308,7 +250,7 @@
 
         // Función para cargar los empleados desde la API
         async function loadEmpleados() {
-            empleadosTableBody.innerHTML = `<tr><td colspan="13" class="py-4 px-6 text-center">Cargando empleados...</td></tr>`;
+            empleadosTableBody.innerHTML = `<tr><td colspan="13" class="table-message">Cargando empleados...</td></tr>`;
             try {
                 const response = await fetch(window.location.origin + '/api/empleados'); 
                 if (!response.ok) {
@@ -318,28 +260,27 @@
 
                 empleadosTableBody.innerHTML = ''; // Limpiar la tabla
                 if (empleados.length === 0) {
-                    empleadosTableBody.innerHTML = `<tr><td colspan="13" class="py-4 px-6 text-center text-gray-500">No se encontraron empleados.</td></tr>`;
+                    empleadosTableBody.innerHTML = `<tr><td colspan="13" class="table-message">No se encontraron empleados.</td></tr>`;
                     return;
                 }
 
                 empleados.forEach(empleado => {
                     const row = document.createElement('tr');
-                    row.classList.add('border-b', 'border-gray-200', 'hover:bg-gray-100');
                     const fechaContratacion = empleado.fechaContratacion ? new Date(empleado.fechaContratacion).toLocaleDateString() : 'N/A';
                     row.innerHTML = `
-                        <td class="py-3 px-6 text-left whitespace-nowrap">${empleado._id}</td>
-                        <td class="py-3 px-6 text-left">${empleado.documento}</td>
-                        <td class="py-3 px-6 text-left">${empleado.nombre} ${empleado.apellido}</td>
-                        <td class="py-3 px-6 text-left">${empleado.email}</td>
-                        <td class="py-3 px-6 text-left">${empleado.edad}</td>
-                        <td class="py-3 px-6 text-left">${empleado.direccion ? empleado.direccion.ciudad : 'N/A'}</td>
-                        <td class="py-3 px-6 text-left">${empleado.direccion ? empleado.direccion.barrio : 'N/A'}</td>
-                        <td class="py-3 px-6 text-left">${empleado.roles ? empleado.roles.join(', ') : 'N/A'}</td>
-                        <td class="py-3 px-6 text-left">$${empleado.salarioBase ? empleado.salarioBase.toFixed(2) : '0.00'}</td>
-                        <td class="py-3 px-6 text-left">${empleado.area ? empleado.area.nombre : 'N/A'}</td>
-                        <td class="py-3 px-6 text-left">${empleado.cargo ? empleado.cargo.nombre : 'N/A'}</td>
-                        <td class="py-3 px-6 text-left">${fechaContratacion}</td>
-                        <td class="py-3 px-6 text-center">
+                        <td>${empleado._id}</td>
+                        <td>${empleado.documento}</td>
+                        <td>${empleado.nombre} ${empleado.apellido}</td>
+                        <td>${empleado.email}</td>
+                        <td>${empleado.edad}</td>
+                        <td>${empleado.direccion ? empleado.direccion.ciudad : 'N/A'}</td>
+                        <td>${empleado.direccion ? empleado.direccion.barrio : 'N/A'}</td>
+                        <td>${empleado.roles ? empleado.roles.join(', ') : 'N/A'}</td>
+                        <td>$${empleado.salarioBase ? empleado.salarioBase.toFixed(2) : '0.00'}</td>
+                        <td>${empleado.area ? empleado.area.nombre : 'N/A'}</td>
+                        <td>${empleado.cargo ? empleado.cargo.nombre : 'N/A'}</td>
+                        <td>${fechaContratacion}</td>
+                        <td class="action-buttons">
                             <button onclick="openEditModal(
                                 '${empleado._id}',
                                 '${empleado.documento}',
@@ -355,8 +296,8 @@
                                 '${empleado.cargoId}',
                                 '${empleado.fechaContratacion ? empleado.fechaContratacion.split('T')[0] : ''}'
                             )"
-                                class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out mr-2">Editar</button>
-                            <button onclick="deleteEmpleado('${empleado._id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out">Eliminar</button>
+                                class="edit-btn">Editar</button>
+                            <button onclick="deleteEmpleado('${empleado._id}')" class="delete-btn">Eliminar</button>
                         </td>
                     `;
                     empleadosTableBody.appendChild(row);
@@ -364,7 +305,7 @@
 
             } catch (error) {
                 console.error('Error al cargar los empleados:', error);
-                empleadosTableBody.innerHTML = `<tr><td colspan="13" class="py-4 px-6 text-center text-red-500">Error al cargar los empleados: ${error.message}</td></tr>`;
+                empleadosTableBody.innerHTML = `<tr><td colspan="13" class="table-message table-error">Error al cargar los empleados: ${error.message}</td></tr>`;
             }
         }
 

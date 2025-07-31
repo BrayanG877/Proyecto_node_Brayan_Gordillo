@@ -4,87 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Áreas de Acme Corporate</title>
-    <!-- Carga de Tailwind CSS para estilos rápidos y modernos -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Fuente Inter para una mejor legibilidad */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Estilos para el modal */
-        .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed; /* Posición fija para cubrir toda la pantalla */
-            z-index: 1000; /* Por encima de otros elementos */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Habilitar scroll si el contenido es muy grande */
-            background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
-        }
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <!-- Enlace a tu archivo CSS personalizado -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-4xl w-full">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Áreas de Acme Corporate</h1>
+<body>
+    <div class="background"></div>
+    <div class="page-wrapper"> <!-- Contenedor principal de la página -->
+        <h1 class="page-main-title">Áreas de Acme Corporate</h1> <!-- Título principal de la página -->
         
-        <!-- Formulario para Crear Nueva Área -->
-        <form id="createAreaForm" class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner">
-            <h2 class="text-xl font-semibold text-blue-700 mb-4">Crear Nueva Área</h2>
-            <div class="mb-4">
-                <label for="areaName" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Área:</label>
-                <input type="text" id="areaName" name="nombre" required
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
-                Añadir Área
-            </button>
-        </form>
+        <div class="content-grid"> <!-- Contenedor para organizar el formulario y la tabla lado a lado -->
+            <!-- Formulario para Crear Nueva Área -->
+            <form id="createAreaForm" class="form-section glass-card"> <!-- 'glass-card' aplicado aquí -->
+                <h2>Crear Nueva Área</h2>
+                <div class="form-group">
+                    <label for="areaName">Nombre del Área:</label>
+                    <input type="text" id="areaName" name="nombre" required>
+                </div>
+                <button type="submit" class="form-submit-btn">
+                    Añadir Área
+                </button>
+            </form>
 
-        <div class="overflow-x-auto mb-8">
-            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead>
-                    <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left rounded-tl-lg">ID</th>
-                        <th class="py-3 px-6 text-left">Nombre del Área</th>
-                        <th class="py-3 px-6 text-center rounded-tr-lg">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="areasTableBody" class="text-gray-600 text-sm font-light">
-                    <!-- Los datos de las áreas se cargarán aquí dinámicamente -->
-                    <tr>
-                        <td colspan="3" class="py-4 px-6 text-center">Cargando áreas...</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Tabla de Áreas -->
+            <div class="table-section glass-card"> <!-- 'glass-card' aplicado aquí -->
+                <h2>Áreas Existentes</h2> <!-- Título para la tabla -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre del Área</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="areasTableBody">
+                            <!-- Los datos de las áreas se cargarán aquí dinámicamente -->
+                            <tr>
+                                <td colspan="3" class="table-message">Cargando áreas...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="mt-8 text-center">
-            <a href="/" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+        <div class="back-button-wrapper"> <!-- Contenedor para el botón de volver -->
+            <a href="/" class="back-to-main-btn">
                 Volver a la Página Principal
             </a>
         </div>
@@ -94,18 +59,17 @@
     <div id="editAreaModal" class="modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeEditModal()">&times;</span>
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Editar Área</h2>
+            <h2>Editar Área</h2>
             <form id="editAreaForm">
                 <input type="hidden" id="editAreaId">
-                <div class="mb-4">
-                    <label for="editAreaName" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Área:</label>
-                    <input type="text" id="editAreaName" name="nombre" required
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="form-group">
+                    <label for="editAreaName">Nombre del Área:</label>
+                    <input type="text" id="editAreaName" name="nombre" required>
                 </div>
-                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                <button type="submit" class="form-submit-btn">
                     Guardar Cambios
                 </button>
-                <button type="button" onclick="closeEditModal()" class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                <button type="button" onclick="closeEditModal()" class="form-submit-btn cancel-btn">
                     Cancelar
                 </button>
             </form>
@@ -122,29 +86,30 @@
 
         // Función para cargar las áreas desde la API
         async function loadAreas() {
-            areasTableBody.innerHTML = `<tr><td colspan="3" class="py-4 px-6 text-center">Cargando áreas...</td></tr>`;
+            areasTableBody.innerHTML = `<tr><td colspan="3" class="table-message">Cargando áreas...</td></tr>`;
             try {
                 const response = await fetch(window.location.origin + '/api/areas');
+                
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);
                 }
+                
                 const areas = await response.json();
 
                 areasTableBody.innerHTML = ''; // Limpiar la tabla
                 if (areas.length === 0) {
-                    areasTableBody.innerHTML = `<tr><td colspan="3" class="py-4 px-6 text-center text-gray-500">No se encontraron áreas.</td></tr>`;
+                    areasTableBody.innerHTML = `<tr><td colspan="3" class="table-message">No se encontraron áreas.</td></tr>`;
                     return;
                 }
 
                 areas.forEach(area => {
                     const row = document.createElement('tr');
-                    row.classList.add('border-b', 'border-gray-200', 'hover:bg-gray-100');
                     row.innerHTML = `
-                        <td class="py-3 px-6 text-left whitespace-nowrap">${area._id}</td>
-                        <td class="py-3 px-6 text-left">${area.nombre}</td>
-                        <td class="py-3 px-6 text-center">
-                            <button onclick="openEditModal('${area._id}', '${area.nombre}')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out mr-2">Editar</button>
-                            <button onclick="deleteArea('${area._id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs shadow-sm transition duration-300 ease-in-out">Eliminar</button>
+                        <td>${area._id}</td>
+                        <td>${area.nombre}</td>
+                        <td class="action-buttons">
+                            <button onclick="openEditModal('${area._id}', '${area.nombre}')" class="edit-btn">Editar</button>
+                            <button onclick="deleteArea('${area._id}')" class="delete-btn">Eliminar</button>
                         </td>
                     `;
                     areasTableBody.appendChild(row);
@@ -152,11 +117,11 @@
 
             } catch (error) {
                 console.error('Error al cargar las áreas:', error);
-                areasTableBody.innerHTML = `<tr><td colspan="3" class="py-4 px-6 text-center text-red-500">Error al cargar las áreas: ${error.message}</td></tr>`;
+                areasTableBody.innerHTML = `<tr><td colspan="3" class="table-message table-error">Error al cargar las áreas: ${error.message}</td></tr>`;
             }
         }
 
-        // Función para crear una nueva área
+        // Función para crear un nuevo área
         createAreaForm.addEventListener('submit', async (event) => {
             event.preventDefault(); // Evitar el envío por defecto del formulario
             const areaName = document.getElementById('areaName').value;
